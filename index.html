@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dachwerk Steiner GmbH — Dachdeckermeisterbetrieb</title>
+  <meta name="description" content="Ihr Dachdeckermeisterbetrieb aus der Region. Neueindeckung, Sanierung, Flachdach und Notdienst — zuverlässig, sauber, termingerecht."/>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Nunito:wght@900&display=swap" rel="stylesheet"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    /* =============================================
+       RESET & ROOT
+    ============================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { overflow-x: hidden; }
+
+    :root {
+      --primary:      #2B6CB0;
+      --primary-dark: #1E4D8C;
+      --primary-light: rgba(43,108,176,.12);
+      --ink:      #14120E;
+      --ink2:     #3D3830;
+      --muted:    #7A8A9C;
+      --border:   rgba(20,18,14,.1);
+      --page:     #F4F1EC;
+      --surface:  #EDEAE4;
+      --surface2: #E8E4DC;
+      --font-d:   'Anton', sans-serif;
+      --font-b:   'DM Sans', sans-serif;
+      --r2: 8px;
+      --r4: 12px;
+      --r8: 16px;
+      --shadow-sm: 0 2px 12px rgba(20,18,14,.06);
+      --shadow-md: 0 8px 40px rgba(20,18,14,.10);
+      --shadow-lg: 0 20px 60px rgba(20,18,14,.14);
+    }
+
+    body {
+      font-family: var(--font-b);
+      background: var(--page);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    a   { text-decoration: none; color: inherit; }
+
+    /* =============================================
+       SCROLL REVEAL
+    ============================================= */
+    .reveal   { opacity: 0; transform: translateY(44px); }
+    .reveal-l { opacity: 0; transform: translateX(-50px); }
+    .reveal-r { opacity: 0; transform: translateX(50px); }
+    .reveal-s { opacity: 0; transform: scale(.93); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal, .reveal-l, .reveal-r, .reveal-s {
+        opacity: 1 !important; transform: none !important;
+      }
+    }
+
+    /* =============================================
+       TYPOGRAPHY HELPERS
+    ============================================= */
+    .section-label {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-d);
+      font-size: clamp(28px, 6vw, 48px);
+      letter-spacing: .03em;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .section-sub {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--ink2);
+      line-height: 1.75;
+      max-width: 560px;
+    }
+
+    /* =============================================
+       BUTTONS
+    ============================================= */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-family: var(--font-b);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      padding: 14px 28px;
+      border-radius: var(--r2);
+      border: none;
+      cursor: pointer;
+      transition: background .2s, transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(43,108,176,.3);
+    }
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: #fff;
+      font-family: var(--font-b);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      padding: 13px 27px;
+      border-radius: var(--r2);
+      border: 1.5px solid rgba(255,255,255,.45);
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,.1);
+      border-color: rgba(255,255,255,.8);
+    }
+
+    /* =============================================
+       NAV
+    ============================================= */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 500;
+      padding: 20px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background .4s, padding .4s, box-shadow .4s;
+    }
+    nav.scrolled {
+      background: rgba(244,241,236,.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 12px 20px;
+      box-shadow: 0 1px 0 var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+    }
+    .nav-logo svg {
+      height: 36px;
+      width: auto;
+    }
+    /* Logo: über Hero weiß, nach Scroll farbig */
+    .logo-icon-back  { fill: rgba(255,255,255,.5); transition: fill .4s; }
+    .logo-icon-front { fill: #fff; transition: fill .4s; }
+    .logo-text-name  { fill: #fff; transition: fill .4s; font-family: Arial, sans-serif; font-size: 21px; font-weight: 700; letter-spacing: .05em; }
+    .logo-text-sub   { fill: rgba(255,255,255,.6); transition: fill .4s; font-family: Arial, sans-serif; font-size: 9.5px; font-weight: 400; letter-spacing: .2em; }
+
+    nav.scrolled .logo-icon-back  { fill: #6B8EAE; }
+    nav.scrolled .logo-icon-front { fill: #2B6CB0; }
+    nav.scrolled .logo-text-name  { fill: #14120E; }
+    nav.scrolled .logo-text-sub   { fill: #6B8EAE; }
+
+    .nav-links {
+      display: none;
+      list-style: none;
+      gap: 32px;
+      align-items: center;
+    }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: rgba(255,255,255,.8);
+      letter-spacing: .02em;
+      transition: color .3s;
+    }
+    .nav-links a:hover { color: #fff; }
+    nav.scrolled .nav-links a { color: var(--ink2); }
+    nav.scrolled .nav-links a:hover { color: var(--primary); }
+
+    .nav-cta {
+      display: none;
+      background: var(--primary);
+      color: #fff;
+      font-family: var(--font-b);
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .04em;
+      padding: 10px 20px;
+      border-radius: var(--r2);
+      transition: background .2s;
+    }
+    .nav-cta:hover { background: var(--primary-dark); }
+
+    .nav-burger {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+    .nav-burger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: background .4s, transform .3s, opacity .3s;
+    }
+    nav.scrolled .nav-burger span { background: var(--ink); }
+    .nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile menu overlay */
+    .nav-mobile {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--ink);
+      z-index: 490;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+    }
+    .nav-mobile.open { display: flex; }
+    .nav-mobile a {
+      font-family: var(--font-d);
+      font-size: 32px;
+      letter-spacing: .05em;
+      color: #fff;
+      transition: color .2s;
+    }
+    .nav-mobile a:hover { color: var(--primary); }
+    .nav-mobile .btn-primary { font-size: 16px; padding: 16px 36px; }
+
+    @media (min-width: 768px) {
+      nav { padding: 22px 48px; }
+      nav.scrolled { padding: 14px 48px; }
+      .nav-links { display: flex; }
+      .nav-cta { display: inline-block; }
+      .nav-burger { display: none; }
+    }
+
+    /* =============================================
+       HERO
+    ============================================= */
+    #hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 60%;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(14,22,34,.72) 0%,
+        rgba(14,22,34,.55) 60%,
+        rgba(14,22,34,.75) 100%
+      );
+      z-index: 1;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 100px 20px 60px;
+      max-width: 700px;
+    }
+    .hero-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+      margin-bottom: 20px;
+    }
+    .hero-label::before {
+      content: '';
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--primary);
+    }
+    .hero-headline {
+      font-family: var(--font-d);
+      font-size: clamp(42px, 10vw, 80px);
+      letter-spacing: .03em;
+      line-height: 1.0;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .hero-headline span { color: var(--primary); }
+    .hero-sub {
+      font-size: clamp(15px, 2.5vw, 18px);
+      font-weight: 300;
+      color: rgba(255,255,255,.8);
+      line-height: 1.7;
+      margin-bottom: 36px;
+      max-width: 520px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .hero-scroll span {
+      font-size: 9px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,.5), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: .4; transform: scaleY(1); }
+      50%       { opacity: 1;  transform: scaleY(1.1); }
+    }
+
+    @media (min-width: 768px) {
+      .hero-content { padding: 120px 48px 80px; }
+    }
+    @media (min-width: 1024px) {
+      .hero-content { padding: 140px 80px 100px; max-width: 800px; }
+    }
+
+    /* =============================================
+       SECTION WRAPPER
+    ============================================= */
+    .section {
+      padding: 72px 20px;
+    }
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-head {
+      margin-bottom: 48px;
+    }
+    .section-head .section-sub {
+      margin-top: 16px;
+    }
+
+    @media (min-width: 768px) {
+      .section { padding: 96px 48px; }
+    }
+    @media (min-width: 1024px) {
+      .section { padding: 120px 80px; }
+    }
+
+    /* =============================================
+       LEISTUNGEN
+    ============================================= */
+    #leistungen { background: var(--page); }
+
+    .leistungen-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .l-card {
+      background: var(--surface);
+      border-radius: var(--r8);
+      padding: 28px 24px;
+      border: 1px solid var(--border);
+      transition: border-color .25s, box-shadow .25s, transform .25s;
+    }
+    .l-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+    .l-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--primary-light);
+      border-radius: var(--r4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    .l-icon svg { width: 22px; height: 22px; }
+    .l-title {
+      font-family: var(--font-d);
+      font-size: 18px;
+      letter-spacing: .03em;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .l-text {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--ink2);
+      line-height: 1.7;
+    }
+    .l-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--primary);
+    }
+    .l-badge svg { width: 12px; height: 12px; }
+
+    @media (min-width: 600px) {
+      .leistungen-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .leistungen-grid { grid-template-columns: repeat(3, 1fr); }
+      /* 7th card: center in last row */
+      .l-card:last-child:nth-child(3n+1) {
+        grid-column: 2;
+      }
+    }
+
+    /* =============================================
+       ÜBER UNS
+    ============================================= */
+    #ueber { background: var(--surface); }
+
+    .ueber-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+    .ueber-text { flex: 1; }
+    .ueber-text p {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--ink2);
+      line-height: 1.85;
+      margin-bottom: 16px;
+    }
+    .ueber-text p:last-of-type { margin-bottom: 28px; }
+    .ueber-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--page);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 14px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink2);
+    }
+    .badge svg { color: var(--primary); }
+    .ueber-image {
+      flex: 1;
+      border-radius: var(--r8);
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      box-shadow: var(--shadow-lg);
+      min-height: 280px;
+    }
+
+    @media (min-width: 900px) {
+      .ueber-inner {
+        flex-direction: row;
+        align-items: center;
+        gap: 72px;
+      }
+      .ueber-text { max-width: 480px; }
+      .ueber-image { aspect-ratio: unset; min-height: 460px; }
+    }
+
+    /* =============================================
+       VORTEILE
+    ============================================= */
+    #vorteile { background: var(--page); }
+
+    .vorteile-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+    .v-item {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .v-num {
+      font-family: var(--font-d);
+      font-size: 38px;
+      color: var(--primary);
+      letter-spacing: .02em;
+      line-height: 1;
+    }
+    .v-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .v-text {
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink2);
+      line-height: 1.7;
+    }
+    .v-divider {
+      width: 32px;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    @media (min-width: 768px) {
+      .vorteile-grid { grid-template-columns: repeat(4, 1fr); gap: 40px; }
+    }
+
+    /* =============================================
+       STATS
+    ============================================= */
+    #stats {
+      background: var(--ink);
+      padding: 64px 20px;
+    }
+    .stats-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px 24px;
+    }
+    .stat-item { text-align: center; }
+    .stat-num {
+      display: block;
+      font-family: var(--font-d);
+      font-size: clamp(40px, 8vw, 64px);
+      color: var(--primary);
+      letter-spacing: .02em;
+      line-height: 1;
+    }
+    .stat-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.45);
+      margin-top: 8px;
+    }
+
+    @media (min-width: 768px) {
+      #stats { padding: 80px 48px; }
+      .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 0; }
+      .stat-item { border-right: 1px solid rgba(255,255,255,.08); }
+      .stat-item:last-child { border-right: none; }
+    }
+    @media (min-width: 1024px) {
+      #stats { padding: 96px 80px; }
+    }
+
+    /* =============================================
+       KONTAKT
+    ============================================= */
+    #kontakt { background: var(--surface); }
+
+    .kontakt-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 48px;
+    }
+    .kontakt-form-wrap { flex: 1.2; }
+    .kontakt-info { flex: 1; }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      background: var(--page);
+      border: 1px solid var(--border);
+      border-radius: var(--r4);
+      padding: 13px 16px;
+      font-family: var(--font-b);
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(43,108,176,.12);
+    }
+    .form-group textarea { resize: vertical; min-height: 130px; }
+
+    .kontakt-info-item {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+    .info-icon {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      background: var(--primary-light);
+      border-radius: var(--r4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .info-icon svg { width: 18px; height: 18px; color: var(--primary); }
+    .info-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+    .info-val {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .notdienst-box {
+      background: var(--primary);
+      border-radius: var(--r8);
+      padding: 20px 22px;
+      margin-top: 32px;
+    }
+    .notdienst-box p:first-child {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+      margin-bottom: 4px;
+    }
+    .notdienst-box p:last-child {
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+      font-family: var(--font-d);
+      letter-spacing: .03em;
+    }
+
+    @media (min-width: 768px) {
+      .form-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 900px) {
+      .kontakt-inner {
+        flex-direction: row;
+        gap: 64px;
+        align-items: flex-start;
+      }
+    }
+
+    /* =============================================
+       FOOTER
+    ============================================= */
+    footer {
+      background: var(--ink);
+      padding: 48px 20px 32px;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+      margin-bottom: 28px;
+    }
+    .footer-logo svg {
+      height: 32px;
+      width: auto;
+      opacity: .8;
+    }
+    .footer-logo .logo-icon-back  { fill: rgba(255,255,255,.4); }
+    .footer-logo .logo-icon-front { fill: rgba(255,255,255,.8); }
+    .footer-logo .logo-text-name  { fill: rgba(255,255,255,.8); }
+    .footer-logo .logo-text-sub   { fill: rgba(255,255,255,.4); }
+    .footer-logo p {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255,255,255,.4);
+      margin-top: 10px;
+      max-width: 260px;
+      line-height: 1.6;
+    }
+    .footer-nav h4 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+      margin-bottom: 14px;
+    }
+    .footer-nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-nav a {
+      font-size: 14px;
+      color: rgba(255,255,255,.65);
+      transition: color .2s;
+    }
+    .footer-nav a:hover { color: #fff; }
+    .footer-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-bottom p {
+      font-size: 12px;
+      color: rgba(255,255,255,.3);
+    }
+
+    @media (min-width: 768px) {
+      footer { padding: 64px 48px 40px; }
+      .footer-top {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-bottom {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+    @media (min-width: 1024px) {
+      footer { padding: 72px 80px 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================
+       MOBILE NAVIGATION OVERLAY
+  ============================================= -->
+  <div class="nav-mobile" id="navMobile">
+    <a href="#leistungen" onclick="closeMobileNav()">Leistungen</a>
+    <a href="#ueber"      onclick="closeMobileNav()">Über uns</a>
+    <a href="#kontakt"    onclick="closeMobileNav()">Kontakt</a>
+    <a href="#kontakt" class="btn-primary" onclick="closeMobileNav()">Angebot anfragen</a>
+  </div>
+
+  <!-- =============================================
+       NAV
+  ============================================= -->
+  <nav id="mainNav">
+    <a href="#hero" class="nav-logo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 58" aria-label="Dachwerk Steiner GmbH">
+        <polygon class="logo-icon-back"  points="36,52 20,52 36,24 52,52"/>
+        <polygon class="logo-icon-front" points="44,52 12,52 28,18 44,52"/>
+        <text class="logo-text-name" x="60" y="34">DACHWERK STEINER</text>
+        <text class="logo-text-sub"  x="61" y="50">DACHDECKERMEISTERBETRIEB</text>
+      </svg>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#leistungen">Leistungen</a></li>
+      <li><a href="#ueber">Über uns</a></li>
+      <li><a href="#vorteile">Vorteile</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <a href="#kontakt" class="nav-cta">Angebot anfragen</a>
+    <button class="nav-burger" id="navBurger" aria-label="Menü öffnen">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- =============================================
+       HERO
+  ============================================= -->
+  <section id="hero">
+    <div class="hero-bg">
+      <img
+        src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1920&q=80"
+        alt="Dachdecker bei der Arbeit"
+        loading="eager"
+      />
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-label">Meisterbetrieb · Gegründet 2004</div>
+      <h1 class="hero-headline">Ihr Dach.<br/><span>Unser</span> Handwerk.</h1>
+      <p class="hero-sub">
+        Dachwerk Steiner GmbH — Ihr zuverlässiger Dachdeckermeisterbetrieb aus der Region.
+        Neueindeckung, Sanierung, Flachdach und Notdienst — sauber, termingerecht, mit Festpreisgarantie.
+      </p>
+      <div class="hero-actions">
+        <a href="#kontakt" class="btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          Jetzt Angebot anfragen
+        </a>
+        <a href="tel:+4920112345678" class="btn-outline">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          0201 / 123 456 78
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       LEISTUNGEN
+  ============================================= -->
+  <section id="leistungen" class="section">
+    <div class="section-inner">
+      <div class="section-head">
+        <span class="section-label reveal">Unsere Leistungen</span>
+        <h2 class="section-title reveal">Von der Neueindeckung<br/>bis zum Notdienst.</h2>
+        <p class="section-sub reveal">Alle Arbeiten aus einer Hand — geplant und ausgeführt von unserem eigenen Meisterbetrieb. Kein Subunternehmer, kein Weiterreichen.</p>
+      </div>
+      <div class="leistungen-grid">
+
+        <div class="l-card reveal">
+          <div class="l-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+              <polygon points="3 12 12 3 21 12"/><rect x="5" y="12" width="14" height="9"/>
+            </svg>
+          </div>
+          <div class="l-title">Neueindeckung</div>
+          <p class="l-text">Ziegel, Schiefer, Metall oder Betondachstein — wir decken neu und beraten Sie ehrlich zur passenden Eindeckung für Ihr Haus.</p>
+        </div>
+
+        <div class="l-card reveal">
+          <div class="l-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+              <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/>
+            </svg>
+          </div>
+          <div class="l-title">Sanierung & Reparatur</div>
+          <p class="l-text">Undicht, verwittert oder nach einem Sturm beschädigt? Wir finden die Ursache und beheben sie dauerhaft — nicht nur provisorisch.</p>
+        </div>
+
+        <div class="l-card reveal">
+          <div class="l-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-4 0v2"/>
+            </svg>
+          </div>
+          <div class="l-title">Flachdach</div>
+          <p class="l-text">Professionelle Abdichtung mit Folie, Bitumen oder Kiesaufbau — dicht und langlebig für die nächsten Jahrzehnte.</p>
+        </div>
+
+        <div class="l-card reveal">
+          <div class="l-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="l-title">Dachrinnen & Entwässerung</div>
+          <p class="l-text">Verstopft, verrostet oder falsch gefällt? Wir installieren, reparieren und warten Ihr gesamtes Entwässerungssystem.</p>
+        </div>
+
+        <div class="l-card reveal">
+          <div class="l-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/>
+            </svg>
+          </div>
+          <div class="l-title">Gauben & Dachfenster</div>
+          <p class="l-text">Mehr Licht und Wohnraum unter dem Dach — wir planen und bauen Gauben und montieren Dachfenster aller gängigen Hersteller.</p>
+        </div>
+
+        <div class="l-card reveal">
+          <div class="l-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <div class="l-title">Wärmedämmung</div>
+          <p class="l-text">Energie sparen, Heizkosten senken: Aufsparren- und Zwischensparrendämmung nach aktuellem GEG-Standard — fachgerecht und förderfähig.</p>
+        </div>
+
+        <div class="l-card reveal">
+          <div class="l-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="l-title">24h Notdienst</div>
+          <p class="l-text">Sturmschaden, akutes Leck, Hageleinschlag — wir sind schnell vor Ort, sichern Ihr Dach und verhindern Folgeschäden.</p>
+          <div class="l-badge">
+            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg>
+            Rund um die Uhr erreichbar
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       ÜBER UNS
+  ============================================= -->
+  <section id="ueber" class="section">
+    <div class="section-inner">
+      <div class="ueber-inner">
+        <div class="ueber-text reveal-l">
+          <span class="section-label">Über uns</span>
+          <h2 class="section-title" style="margin-bottom:24px;">Handwerk,<br/>das man nicht sieht —<br/>weil alles sitzt.</h2>
+          <p>
+            Seit über 20 Jahren arbeiten wir auf den Dächern der Region. Als eingetragener Meisterbetrieb stehen wir für handwerkliche Qualität, die sich nicht aufdrängt — sie hält einfach.
+          </p>
+          <p>
+            Kein Subunternehmer, keine leeren Versprechen. Nur unser eigenes Team, das seinen Namen unter jede Arbeit setzt. Ob Neubau, Sanierung oder schneller Notdienst: Sie bekommen einen festen Ansprechpartner vom ersten Gespräch bis zur Abnahme.
+          </p>
+          <div class="ueber-badges">
+            <span class="badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Meisterbetrieb
+            </span>
+            <span class="badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Innungsmitglied
+            </span>
+            <span class="badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              5 Jahre Gewährleistung
+            </span>
+            <span class="badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Festpreisgarantie
+            </span>
+          </div>
+        </div>
+        <div class="ueber-image reveal-r">
+          <img
+            src="https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=800&q=80"
+            alt="Dachdecker Meisterbetrieb bei der Arbeit"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       VORTEILE
+  ============================================= -->
+  <section id="vorteile" class="section">
+    <div class="section-inner">
+      <div class="section-head">
+        <span class="section-label reveal">Warum Dachwerk Steiner</span>
+        <h2 class="section-title reveal">Vier gute Gründe.</h2>
+      </div>
+      <div class="vorteile-grid">
+        <div class="v-item reveal">
+          <div class="v-num">01</div>
+          <div class="v-divider"></div>
+          <div class="v-title">Meisterbetrieb</div>
+          <p class="v-text">Alle Arbeiten werden von ausgebildeten Dachdeckermeistern geplant, überwacht und abgenommen.</p>
+        </div>
+        <div class="v-item reveal">
+          <div class="v-num">02</div>
+          <div class="v-divider"></div>
+          <div class="v-title">Festpreisangebot</div>
+          <p class="v-text">Kein böses Erwachen bei der Rechnung. Sie wissen vorher, was Sie zahlen — schriftlich und verbindlich.</p>
+        </div>
+        <div class="v-item reveal">
+          <div class="v-num">03</div>
+          <div class="v-divider"></div>
+          <div class="v-title">Regionaler Betrieb</div>
+          <p class="v-text">Kurze Wege, schnelle Reaktion. Wir kennen das Wetter hier und sind bei Notfällen innerhalb von 24 Stunden vor Ort.</p>
+        </div>
+        <div class="v-item reveal">
+          <div class="v-num">04</div>
+          <div class="v-divider"></div>
+          <div class="v-title">5 Jahre Gewährleistung</div>
+          <p class="v-text">Auf alle ausgeführten Arbeiten gewähren wir 5 Jahre Gewährleistung. Ohne Wenn und Aber.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       STATS
+  ============================================= -->
+  <section id="stats">
+    <div class="stats-inner">
+      <div class="stats-grid">
+        <div class="stat-item reveal">
+          <span class="stat-num" data-target="20" data-suffix="+">0+</span>
+          <span class="stat-label">Jahre Erfahrung</span>
+        </div>
+        <div class="stat-item reveal">
+          <span class="stat-num" data-target="850" data-suffix="+">0+</span>
+          <span class="stat-label">Abgeschlossene Projekte</span>
+        </div>
+        <div class="stat-item reveal">
+          <span class="stat-num" data-target="98" data-suffix="%">0%</span>
+          <span class="stat-label">Weiterempfehlung</span>
+        </div>
+        <div class="stat-item reveal">
+          <span class="stat-num" data-target="24" data-suffix="h">0h</span>
+          <span class="stat-label">Reaktionszeit Notdienst</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       KONTAKT
+  ============================================= -->
+  <section id="kontakt" class="section">
+    <div class="section-inner">
+      <div class="section-head">
+        <span class="section-label reveal">Kontakt</span>
+        <h2 class="section-title reveal">Kostenloses Angebot<br/>anfragen.</h2>
+        <p class="section-sub reveal">Beschreiben Sie kurz Ihr Anliegen — wir melden uns innerhalb von 24 Stunden bei Ihnen. Unverbindlich und kostenlos.</p>
+      </div>
+      <div class="kontakt-inner">
+        <div class="kontakt-form-wrap reveal-l">
+          <form>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Vor- & Nachname</label>
+                <input type="text" id="name" name="name" placeholder="Max Mustermann" required/>
+              </div>
+              <div class="form-group">
+                <label for="tel">Telefon</label>
+                <input type="tel" id="tel" name="tel" placeholder="0201 / ..."/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="email">E-Mail</label>
+                <input type="email" id="email" name="email" placeholder="name@beispiel.de" required/>
+              </div>
+              <div class="form-group">
+                <label for="leistung">Leistung</label>
+                <select id="leistung" name="leistung">
+                  <option value="">Bitte wählen …</option>
+                  <option>Neueindeckung</option>
+                  <option>Sanierung & Reparatur</option>
+                  <option>Flachdach</option>
+                  <option>Dachrinnen</option>
+                  <option>Gauben & Dachfenster</option>
+                  <option>Wärmedämmung</option>
+                  <option>Notdienst</option>
+                  <option>Sonstiges</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:20px;">
+              <label for="nachricht">Nachricht</label>
+              <textarea id="nachricht" name="nachricht" placeholder="Beschreiben Sie kurz Ihr Anliegen …"></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;justify-content:center;padding:16px;">
+              Anfrage absenden
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </form>
+        </div>
+
+        <div class="kontakt-info reveal-r">
+          <div class="kontakt-info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.67A2 2 0 012 .18h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+            </div>
+            <div>
+              <div class="info-label">Telefon</div>
+              <div class="info-val">0201 / 123 456 78</div>
+            </div>
+          </div>
+          <div class="kontakt-info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div>
+              <div class="info-label">E-Mail</div>
+              <div class="info-val">info@dachwerk-steiner.de</div>
+            </div>
+          </div>
+          <div class="kontakt-info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <div class="info-label">Adresse</div>
+              <div class="info-val">Dachstraße 14<br/>45127 Essen</div>
+            </div>
+          </div>
+          <div class="kontakt-info-item">
+            <div class="info-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div>
+              <div class="info-label">Öffnungszeiten</div>
+              <div class="info-val">Mo–Fr 7:00–17:00 Uhr<br/>Notdienst: 24/7</div>
+            </div>
+          </div>
+          <div class="notdienst-box">
+            <p>Notdienst rund um die Uhr</p>
+            <p>0201 / 123 456 79</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================
+       FOOTER
+  ============================================= -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 58" aria-label="Dachwerk Steiner GmbH">
+            <polygon class="logo-icon-back"  points="36,52 20,52 36,24 52,52"/>
+            <polygon class="logo-icon-front" points="44,52 12,52 28,18 44,52"/>
+            <text class="logo-text-name" x="60" y="34">DACHWERK STEINER</text>
+            <text class="logo-text-sub"  x="61" y="50">DACHDECKERMEISTERBETRIEB</text>
+          </svg>
+          <p>Ihr Dachdeckermeisterbetrieb aus der Region — zuverlässig seit 2004.</p>
+        </div>
+        <div class="footer-nav">
+          <h4>Leistungen</h4>
+          <ul>
+            <li><a href="#leistungen">Neueindeckung</a></li>
+            <li><a href="#leistungen">Dachsanierung</a></li>
+            <li><a href="#leistungen">Flachdach</a></li>
+            <li><a href="#leistungen">Notdienst</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav">
+          <h4>Unternehmen</h4>
+          <ul>
+            <li><a href="#ueber">Über uns</a></li>
+            <li><a href="#kontakt">Kontakt</a></li>
+            <li><a href="#">Impressum</a></li>
+            <li><a href="#">Datenschutz</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2024 Dachwerk Steiner GmbH. Alle Rechte vorbehalten.</p>
+        <p>Dachdeckermeisterbetrieb · Innung des Dachdeckerhandwerks</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- DEMO BADGE -->
+  <div style="
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    background: rgba(20,18,14,.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.10);
+    border-radius: 8px;
+    padding: 10px 16px 10px 16px;
+    pointer-events: none;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 7px;
+  ">
+    <span style="
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.4);
+    ">Beispielumsetzung</span>
+    <div style="width: 100%; height: 1px; background: rgba(255,255,255,.08);"></div>
+    <img src="baltify-logo.png" alt="baltify." style="
+      height: 20px;
+      width: auto;
+      object-fit: contain;
+      display: block;
+    "/>
+  </div>
+
+  <!-- =============================================
+       JAVASCRIPT
+  ============================================= -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+    var noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* --- NAV SCROLL STATE --- */
+    function initNav() {
+      var nav = document.getElementById('mainNav');
+      window.addEventListener('scroll', function () {
+        nav.classList.toggle('scrolled', window.scrollY > 40);
+      }, { passive: true });
+    }
+
+    /* --- MOBILE BURGER --- */
+    var burger = document.getElementById('navBurger');
+    var mobileNav = document.getElementById('navMobile');
+    burger.addEventListener('click', function () {
+      burger.classList.toggle('open');
+      mobileNav.classList.toggle('open');
+    });
+    function closeMobileNav() {
+      burger.classList.remove('open');
+      mobileNav.classList.remove('open');
+    }
+
+    /* --- SCROLL REVEAL --- */
+    function initScrollReveal() {
+      if (noMotion) return;
+      gsap.utils.toArray('.reveal').forEach(function (el) {
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: .8, ease: 'expo.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+        });
+      });
+      gsap.utils.toArray('.reveal-l').forEach(function (el) {
+        gsap.to(el, {
+          opacity: 1, x: 0, duration: .9, ease: 'expo.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+        });
+      });
+      gsap.utils.toArray('.reveal-r').forEach(function (el) {
+        gsap.to(el, {
+          opacity: 1, x: 0, duration: .9, ease: 'expo.out',
+          scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' }
+        });
+      });
+    }
+
+    /* --- STATS COUNT-UP --- */
+    function initStats() {
+      document.querySelectorAll('.stat-num[data-target]').forEach(function (el) {
+        var target = parseInt(el.dataset.target, 10);
+        var suffix = el.dataset.suffix || '';
+        ScrollTrigger.create({
+          trigger: el, start: 'top 85%', once: true,
+          onEnter: function () {
+            if (noMotion) { el.textContent = target + suffix; return; }
+            var obj = { val: 0 };
+            gsap.to(obj, {
+              val: target, duration: 1.8, ease: 'power2.out',
+              onUpdate: function () { el.textContent = Math.round(obj.val) + suffix; },
+              onComplete: function () { el.textContent = target + suffix; }
+            });
+          }
+        });
+      });
+    }
+
+    /* --- SMOOTH SCROLL --- */
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    /* --- INIT --- */
+    function initAll() {
+      initNav();
+      initScrollReveal();
+      initStats();
+      ScrollTrigger.refresh();
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAll);
+    } else {
+      initAll();
+    }
+  </script>
+</body>
+</html>
